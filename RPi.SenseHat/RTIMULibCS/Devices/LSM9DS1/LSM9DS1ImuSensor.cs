@@ -21,8 +21,10 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Microsoft.IoT.Lightning.Providers;
 using System;
 using System.Threading.Tasks;
+using Windows.Devices;
 using Windows.Devices.Enumeration;
 using Windows.Devices.I2c;
 
@@ -85,12 +87,11 @@ namespace RichardsTech.Sensors.Devices.LSM9DS1
 		{
 			try
 			{
-				string aqsFilter = I2cDevice.GetDeviceSelector("I2C1");
 
-				DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(aqsFilter);
-				if (collection.Count == 0)
+				if (LightningProvider.IsLightningEnabled)
 				{
-					throw new SensorException("I2C device not found");
+					// Set Lightning as the default provider
+					LowLevelDevicesController.DefaultProvider = LightningProvider.GetAggregateProvider();
 				}
 
 				I2cConnectionSettings accelGyroI2CSettings = new I2cConnectionSettings(_accelGyroI2CAddress)
@@ -98,14 +99,21 @@ namespace RichardsTech.Sensors.Devices.LSM9DS1
 					BusSpeed = I2cBusSpeed.FastMode
 				};
 
-				_accelGyroI2CDevice = await I2cDevice.FromIdAsync(collection[0].Id, accelGyroI2CSettings);
+				I2cController controller = await I2cController.GetDefaultAsync();
+				if (controller == null)
+				{
+					throw new SensorException("I2C device not found");
+				}
+
+				_accelGyroI2CDevice = controller.GetDevice(accelGyroI2CSettings);
 
 				I2cConnectionSettings magI2CSettings = new I2cConnectionSettings(_magI2CAddress)
 				{
 					BusSpeed = I2cBusSpeed.FastMode
 				};
 
-				_magI2CDevice = await I2cDevice.FromIdAsync(collection[0].Id, magI2CSettings);
+				_magI2CDevice = controller.GetDevice(magI2CSettings);
+
 			}
 			catch (Exception exception)
 			{

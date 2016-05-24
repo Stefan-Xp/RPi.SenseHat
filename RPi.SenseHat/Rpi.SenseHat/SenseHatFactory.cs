@@ -29,6 +29,8 @@ using RichardsTech.Sensors;
 using RichardsTech.Sensors.Devices.HTS221;
 using RichardsTech.Sensors.Devices.LPS25H;
 using RichardsTech.Sensors.Devices.LSM9DS1;
+using Microsoft.IoT.Lightning.Providers;
+using Windows.Devices;
 
 namespace Emmellsoft.IoT.Rpi.SenseHat
 {
@@ -64,16 +66,19 @@ namespace Emmellsoft.IoT.Rpi.SenseHat
 
 		private static async Task<MainI2CDevice> CreateDisplayJoystickI2CDevice()
 		{
-			string aqsFilter = I2cDevice.GetDeviceSelector();
-
-			DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(aqsFilter);
+			if (LightningProvider.IsLightningEnabled)
+			{
+				// Set Lightning as the default provider
+				LowLevelDevicesController.DefaultProvider = LightningProvider.GetAggregateProvider();
+			}
 
 			I2cConnectionSettings settings = new I2cConnectionSettings(DeviceAddress)
 			{
 				BusSpeed = I2cBusSpeed.StandardMode
 			};
 
-			I2cDevice i2CDevice = await I2cDevice.FromIdAsync(collection[0].Id, settings);
+			I2cController controller = await I2cController.GetDefaultAsync();
+			I2cDevice i2CDevice = controller.GetDevice(settings);
 
 			return new MainI2CDevice(i2CDevice);
 		}

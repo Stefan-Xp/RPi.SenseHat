@@ -24,7 +24,10 @@
 using System;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
+using Windows.Devices;
 using Windows.Devices.I2c;
+
+using Microsoft.IoT.Lightning.Providers;
 
 namespace RichardsTech.Sensors.Devices.HTS221
 {
@@ -123,20 +126,25 @@ namespace RichardsTech.Sensors.Devices.HTS221
 		{
 			try
 			{
-				string aqsFilter = I2cDevice.GetDeviceSelector("I2C1");
-
-				DeviceInformationCollection collection = await DeviceInformation.FindAllAsync(aqsFilter);
-				if (collection.Count == 0)
+				if (LightningProvider.IsLightningEnabled)
 				{
-					throw new SensorException("I2C device not found");
+					// Set Lightning as the default provider
+					LowLevelDevicesController.DefaultProvider = LightningProvider.GetAggregateProvider();
 				}
+
 
 				I2cConnectionSettings i2CSettings = new I2cConnectionSettings(_i2CAddress)
 				{
 					BusSpeed = I2cBusSpeed.FastMode
 				};
 
-				_i2CDevice = await I2cDevice.FromIdAsync(collection[0].Id, i2CSettings);
+				I2cController controller = await I2cController.GetDefaultAsync();
+				if (controller == null)
+				{
+					throw new SensorException("I2C device not found");
+				}
+
+				_i2CDevice = controller.GetDevice(i2CSettings);
 			}
 			catch (Exception exception)
 			{
