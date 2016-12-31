@@ -46,5 +46,7 @@ It's deliberately not thread-safe to maximize performance, so you should avoid c
 ************************
 
 Changes for this Fork 2016-12-31:
+
 *) Addded the "Threadending" to all Demos - Now it is possible to switch through different Demos using the "Next" Button on the GUI
+
 *) Added Demos "ScrollingClock" and "BinaryClock" which do exactly what you would think of them on the LED Matrix
