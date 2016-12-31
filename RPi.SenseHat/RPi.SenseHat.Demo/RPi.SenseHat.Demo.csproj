@@ -11,8 +11,8 @@
     <AssemblyName>RPi.SenseHat.Demo</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
@@ -98,6 +98,9 @@
     </Compile>
     <Compile Include="DemoRunner.cs" />
     <Compile Include="DemoSelector.cs" />
+    <Compile Include="Demos\ReadAllSensors.cs" />
+    <Compile Include="Demos\BinaryClock.cs" />
+    <Compile Include="Demos\ScrollingClock.cs" />
     <Compile Include="Demos\SingleColorScrollText.cs" />
     <Compile Include="Demos\MultiColorScrollText.cs" />
     <Compile Include="Demos\Compass.cs" />
@@ -152,7 +155,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="WindowsIoT, Version=10.0.10586.0">
+    <SDKReference Include="WindowsIoT, Version=10.0.14393.0">
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>

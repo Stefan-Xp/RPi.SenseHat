@@ -30,24 +30,38 @@ namespace RPi.SenseHat.Demo
 	/// <summary>
 	/// Runs a demo.
 	/// </summary>
-	public static class DemoRunner
+	public class DemoRunner
 	{
-		/// <summary>
-		/// Call this (for example) from the constructor of the MainPage.
-		/// Example:
-		/// <code>DemoRunner.Run(senseHat => new Demos.DiscoLights(senseHat));</code>
-		/// </summary>
-		/// <param name="createDemo">The demo to run.</param>
-		public static void Run(Func<ISenseHat, SenseHatDemo> createDemo)
+        public int? myTaskId;
+        SenseHatDemo demo;
+       
+
+        /// <summary>
+        /// Call this (for example) from the constructor of the MainPage.
+        /// Example:
+        /// <code>DemoRunner.Run(senseHat => new Demos.DiscoLights(senseHat));</code>
+        /// </summary>
+        /// <param name="createDemo">The demo to run.</param>
+        public void Run(Func<ISenseHat, SenseHatDemo> createDemo)
 		{
 			Task.Run(async () =>
 			{
 				ISenseHat senseHat = await SenseHatFactory.GetSenseHat().ConfigureAwait(false);
 
-				SenseHatDemo demo = createDemo(senseHat);
-
+				demo = createDemo(senseHat);
+                myTaskId = Task.CurrentId;
 				demo.Run();
 			}).ConfigureAwait(false);
 		}
+
+        public void CancelTask()
+        {
+            var tokenSource = new System.Threading.CancellationTokenSource();
+            
+            tokenSource.Cancel();
+            demo.Stop();
+            
+            return;
+        }
 	}
 }

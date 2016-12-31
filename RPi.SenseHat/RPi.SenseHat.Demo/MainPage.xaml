@@ -7,7 +7,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-		<TextBlock x:Name="ScreenText" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="26.667"/>
+    <Grid Height="480" Width="800" Background="#000000">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="4*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" x:Name="DemoNameText" FontSize="32"  Height="60" Margin="10,0" HorizontalAlignment="Center" Text="Sense Hat Demo" Foreground="White">
+        </TextBlock>
+        <Button Grid.Row="1" x:Name="btnNext" Content="Next" Click="btnNext_Click" Height="80" FontSize="24" HorizontalAlignment="Stretch" Margin="10,0" Foreground="#FFFFFFFF" BorderBrush="#FFFFFFFF"/>
+        <TextBlock Grid.Row="2" Text="10:31:00 2016-12-30" x:Name="ScreenText" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="72" Margin="10" Foreground="White"/>
     </Grid>
 </Page>

@@ -28,15 +28,48 @@ using Windows.UI.Xaml.Controls;
 
 namespace RPi.SenseHat.Demo
 {
-	public sealed partial class MainPage : Page
+	
+
+    public sealed partial class MainPage : Page
 	{
+        enum enumDemoNumber
+        {
+            DiscoLights,
+            JoystickPixel,
+            WriteTemperature,
+            GravityBlob,
+            Compass,
+            SingleColorScrollText,
+            MultiColorScrollText,
+            SpriteAnimation,
+            ReadAllSensors,
+            ScrollingClock,
+            BinaryClock,
+            GammaTest
+        }
+
+
+        enumDemoNumber DemoNumber = enumDemoNumber.BinaryClock;
+        DemoRunner myDemoRunner = new DemoRunner();
+
+
 		public MainPage()
 		{
-			InitializeComponent();
-			DemoRunner.Run(senseHat => DemoSelector.GetDemo(senseHat, this));
+            InitializeComponent();
+            DemoNameText.Text = DemoNumber.ToString();
+            if(DemoNumber != enumDemoNumber.ReadAllSensors)
+            {
+                ScreenText.FontSize = 72;
+            }
+            else
+            {
+                ScreenText.FontSize = 28;
+            }
+            myDemoRunner.Run(senseHat => DemoSelector.GetDemo((int) DemoNumber, senseHat, SetScreenText));
+
 		}
 
-		public async void SetScreenText(string text)
+		private async void SetScreenText(string text)
 		{
 			await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
 				CoreDispatcherPriority.Normal,
@@ -47,5 +80,30 @@ namespace RPi.SenseHat.Demo
 					// Feel free to add more UI stuff here! :-)
 				});
 		}
-	}
+
+        private void btnNext_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if(DemoNumber <= enumDemoNumber.GammaTest-1)
+            {
+                DemoNumber++;
+            }
+            else
+            {
+                DemoNumber = 0;
+            }
+            myDemoRunner.CancelTask();
+
+            // Adjust FontSize if needed
+            if (DemoNumber != enumDemoNumber.ReadAllSensors)
+            {
+                ScreenText.FontSize = 72;
+            }
+            else
+            {
+                ScreenText.FontSize = 28;
+            }
+            DemoNameText.Text = "Now showing Demo #" + (int) DemoNumber + " " + DemoNumber.ToString();
+            myDemoRunner.Run(senseHat => DemoSelector.GetDemo((int)(DemoNumber), senseHat, SetScreenText));
+        }
+    }
 }
