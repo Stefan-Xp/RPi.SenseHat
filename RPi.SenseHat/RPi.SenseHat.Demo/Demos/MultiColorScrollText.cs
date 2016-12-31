@@ -37,8 +37,8 @@ namespace RPi.SenseHat.Demo.Demos
 	{
 		private readonly string _scrollText;
 
-		public MultiColorScrollText(ISenseHat senseHat, MainPage mainPage, string scrollText)
-			: base(senseHat, mainPage)
+		public MultiColorScrollText(ISenseHat senseHat, string scrollText)
+			: base(senseHat)
 		{
 			_scrollText = scrollText;
 		}
@@ -66,7 +66,7 @@ namespace RPi.SenseHat.Demo.Demos
 				characterRenderer,
 				characters);
 
-			while (true)
+			while (isRunning)
 			{
 				// Step the scroller.
 				if (!textScroller.Step())

@@ -33,8 +33,8 @@ namespace RPi.SenseHat.Demo.Demos
 	/// </summary>
 	public class WriteTemperature : SenseHatDemo
 	{
-		public WriteTemperature(ISenseHat senseHat, MainPage mainPage)
-			: base(senseHat, mainPage)
+		public WriteTemperature(ISenseHat senseHat, Action<string> setScreenText)
+			: base(senseHat, setScreenText)
 		{
 		}
 
@@ -55,7 +55,7 @@ namespace RPi.SenseHat.Demo.Demos
 
 			string unitText = GetUnitText(unit); // Get the unit as a string.
 
-			while (true)
+			while (isRunning)
 			{
 				SenseHat.Sensors.HumiditySensor.Update();
 
@@ -76,7 +76,7 @@ namespace RPi.SenseHat.Demo.Demos
 					tinyFont.Write(display, text, Colors.White);
 					display.Update();
 
-					MainPage?.SetScreenText($"{temperatureValue:0.0} {unitText}"); // Update the MainPage (if it's utilized; i.e. not null).
+					SetScreenText?.Invoke($"{temperatureValue:0.0} {unitText}"); // Update the MainPage (if it's utilized; i.e. not null).
 
 					// Sleep quite some time; the temperature usually change quite slowly...
 					Sleep(TimeSpan.FromSeconds(5));
