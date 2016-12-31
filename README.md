@@ -41,3 +41,10 @@ Regarding thread safety:
 The SenseHatFactory.Singleton.GetSenseHat() call is thread-safe, but the rest of the API is not.
 
 It's deliberately not thread-safe to maximize performance, so you should avoid calling (for instance) the Update method on the sensors simultaneously from different threads (but you *may* call it from any thread).
+
+
+************************
+
+Changes for this Fork 2016-12-31:
+*) Addded the "Threadending" to all Demos - Now it is possible to switch through different Demos using the "Next" Button on the GUI
+*) Added Demos "ScrollingClock" and "BinaryClock" which do exactly what you would think of them on the LED Matrix
